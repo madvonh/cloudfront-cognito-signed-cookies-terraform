@@ -1,0 +1,8 @@
+{
+  "name": "key-rotator",
+  "version": "1.0.0",
+  "description": "Rotates an RSA key for CloudFront Trusted Key group",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
+}

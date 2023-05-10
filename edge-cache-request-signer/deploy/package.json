@@ -1,0 +1,9 @@
+{
+  "name": "edge_cache_signer",
+  "version": "1.0.0",
+  "description": "Cache signer",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0",
+    "jwk-to-pem": "^2.0.5"
+  }
+}
