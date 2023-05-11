@@ -33,7 +33,7 @@ resource "aws_lambda_function" "EdgeCacheRequestSigner" {
   runtime                        = "nodejs16.x"
   timeout                        = "5"
   provider                       = aws.us-east-1
-  # publish will public a new version of the lambda. Take this away after first publish if code is not changes
+  # publish will publish a new version of the lambda. Take this away after first publish if code is not changes
   publish          = true
   source_code_hash = data.archive_file.EdgeCacheRequestSignerArchive.output_base64sha256
 

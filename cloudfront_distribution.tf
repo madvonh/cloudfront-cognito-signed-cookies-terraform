@@ -8,7 +8,6 @@ resource "aws_cloudfront_public_key" "VerifySigningPublicKey" {
   }
 }
 
-# note the random name
 resource "aws_cloudfront_key_group" "VerifySigningKeyGroup" {
   items = [aws_cloudfront_public_key.VerifySigningPublicKey.id]
   name  = "${var.project_prefix}-group"
@@ -17,15 +16,7 @@ resource "aws_cloudfront_key_group" "VerifySigningKeyGroup" {
   }
 }
 
-# https://aws.amazon.com/blogs/storage/modify-images-cached-in-amazon-cloudfront-using-amazon-s3-object-lambda/
-resource "aws_cloudfront_distribution" "ImageTransformDistribution" {
-  /*custom_error_response {
-    error_caching_min_ttl = 0
-    error_code            = 503
-    response_code         = 200
-    response_page_path    = "/cookie/"
-  }*/
-
+resource "aws_cloudfront_distribution" "ImageDistribution" {
   enabled         = "true"
   http_version    = "http2"
   is_ipv6_enabled = "true"
@@ -44,9 +35,10 @@ resource "aws_cloudfront_distribution" "ImageTransformDistribution" {
       lambda_arn   = "${aws_lambda_function.EdgeCacheRequestSigner.arn}:${aws_lambda_function.EdgeCacheRequestSigner.version}"
     }
 
-    max_ttl                = "0"
-    min_ttl                = "0"
-    smooth_streaming       = "false"
+    max_ttl          = "0"
+    min_ttl          = "0"
+    smooth_streaming = "false"
+    # Could be any value, since this target never will be hit
     target_origin_id       = "www.google.com"
     viewer_protocol_policy = "redirect-to-https"
   }
@@ -56,7 +48,7 @@ resource "aws_cloudfront_distribution" "ImageTransformDistribution" {
     trusted_key_groups = [aws_cloudfront_key_group.VerifySigningKeyGroup.id]
     cached_methods     = ["HEAD", "GET"]
     compress           = "true"
-    
+
     forwarded_values {
       query_string = false
 

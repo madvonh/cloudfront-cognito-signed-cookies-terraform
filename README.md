@@ -1,4 +1,4 @@
-# Terraform
+# Cloudfront Cognito Signed Cookies Terraform
 
 ## Get started with terraform
 
@@ -7,20 +7,6 @@ You need to setup terraform on your machine and be able to connect and deploy to
 1 Install Terraform. Use this link to find out how on your machine: https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 2 Create an IAM user in AWS with the credential type "Access key - Programmatic access" and attach the Administrator policy to it. Save the Access Key and Secret Key that is created.
 3 Configure AWS CLI in your local system by writing "aws configure" in the command prompt. Fill in the access and secret keys, default region and output format. Terraform will use this to connect to the AWS api.
-
-## CloudFront cache for images
-
-The caching solution is described in this blog post:
-https://aws.amazon.com/blogs/storage/modify-images-cached-in-amazon-cloudfront-using-amazon-s3-object-lambda/
-
-According to this solution, original images are placed in a S3 bucket. When requested they can be resized before returned to the user. A resized requested image is then cached on the edge close to the user.
-
-To get a resized image the w(width) and/or the h(height) parameter needs to be added to the request like this:
-https://xxxxxxx.cloudfront.net/TestImage.jpg?h=300
-https://xxxxxxx.cloudfront.net/TestImage.jpg?w=200
-https://xxxxxxx.cloudfront.net/TestImage.jpg?h=300&w=200
-
-If both "h" and "w" are in the parameters, they need to be the order above. If "w" is first it won't work.
 
 ### Security setup for image request
 
@@ -84,7 +70,7 @@ resource "aws_secretsmanager_secret_rotation" "RsaKeypairRotation" {
 }
 ```
 
-The lambda performing the operations is "key-rotator". This is What is does:
+The lambda performing the operations is "key-rotator". This is what is does:
 1 A new RSA key pair is created.
 2 Identifies the oldest public key saved in CloudFront that is associated with this solution (if there are 2 keys).
 3 The old key (if any) is disassociated from the Trusted Key Group.
@@ -118,37 +104,6 @@ resource "local_file" "changed_index_file" {
   filename = "${path.module}/edge-cache-request-signer/deploy/index.js"
 }
 ```
-
-### Build lambda function for resizing images for deploy
-
-The lambda function "images-exif-transform" is the one that will resize the images. This is done with the help of "Sharp" module. Lambdas runs on Linux operating system and this module needs to be build on a Linux system to be able to run in the cloud. If you don't have a Linux operating system, you can build the package in docker. To do so follow this steps:
-
-1 Make sure you have docker installed on your machine https://www.docker.com/
-
-2 Open a terminal window in the folder "images-exif-transform" (or navigaate to it).
-
-3 Run (first time only):
-
-```bash
-docker-compose build
-```
-
-4 Everytime you want to build a new your version of the app, run
-
-```bash
-docker-compose up --build
-```
-
-5 Note that after the build is complete the container sleeps for 10 minutes for you to copy the build from inside the container to your machine.
-
-6 Open a new terminal in the root folder of your project and copy your build into the "images-exif-transform"-folder with this command:
-
-```bash
-docker cp aws-images-exif-transform:/build/images-exif-transform.zip images-exif-transform
-```
-
-7 Let the container terminate or press ctrl+c in the first terminal window to kill it.
-
 ### Deploy solution
 
 If this terraform solution is deployed more than once, be aware that a new verion for the lambda function "EdgeOriginRequestSigner" will be deployed. This is caused by the parameter:  
@@ -156,24 +111,17 @@ If this terraform solution is deployed more than once, be aware that a new verio
 
 If changes was made to the function you need to deploy a new version. If not, comment out "publish = true" and no new version will be deployed.
 
-### Destroy solution
+### Destroy lambda
 
-To be able to destroy the lambda that is connected to the cloudfront we need to disconnect the "EdgeOriginRequestSigner" lambda first. The connection is set in the file: "cloudfront_distribution.tf" like this:
+To be able to destroy only the lambda that is connected to the cloudfront we need to disconnect the "EdgeCacheRequestSigner" lambda first. The connection is set in the file: "cloudfront_distribution.tf" like this:
 
 ```code
-lambda_function_association {
-  event_type = "origin-request"
-  include_body = "false"
-  lambda_arn = "${aws_lambda_function.EdgeOriginRequestSigner.arn}:${aws_lambda_function.EdgeOriginRequestSigner.   version}"
-}
+  lambda_function_association {
+    event_type   = "viewer-request"
+    include_body = "false"
+    lambda_arn   = "${aws_lambda_function.EdgeCacheRequestSigner.arn}:${aws_lambda_function.EdgeCacheRequestSigner.version}"
+  }
 ```
 
-Remove this first and run "Terraform apply". Then remove the rest. If everything is removed in one go the Terraform apply will fail.
-
-Resources:
-
-https://elopmental.dev/easy-appsync-with-terraform/
-https://tommygroshong.com/posts/appsync-cognito-cloudfront/
-
-
-https://ionicframework.com/docs/angular/your-first-app
+Remove the above part first and run "Terraform apply". Then remove the the lambda. If everything is removed in one go the Terraform apply will fail.
+If you want to remove the whole solution, use "Terrafrom destroy" instead.

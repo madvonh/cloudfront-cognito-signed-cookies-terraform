@@ -64,7 +64,7 @@ resource "aws_s3_bucket_cors_configuration" "photo_bucket_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_origins = ["*"]
-    allowed_methods = ["HEAD", "GET", "PUT", "POST","DELETE"]            
+    allowed_methods = ["HEAD", "GET", "PUT", "POST", "DELETE"]
     expose_headers  = ["ETag"]
     max_age_seconds = 3000
   }

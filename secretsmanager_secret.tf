@@ -6,6 +6,7 @@ resource "aws_secretsmanager_secret" "SigningPrivateKey" {
 }
 
 # Creating a AWS secret versions for CloudFront keypair private key for signing cookies
+# Uses the key from the variables initially, but this won't be used since the key will be rotated
 resource "aws_secretsmanager_secret_version" "SigningPrivateKeyVersion" {
   secret_id     = aws_secretsmanager_secret.SigningPrivateKey.id
   secret_string = var.private_key_pem
