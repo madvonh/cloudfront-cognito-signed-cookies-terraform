@@ -12,13 +12,11 @@ resource "aws_s3_bucket_acl" "photo_bucket_acl" {
   acl    = "private"
 }
 
-#Resource to add bucket policy to a bucket 
 resource "aws_s3_bucket_policy" "authenticated_access" {
   bucket = aws_s3_bucket.photo_bucket.id
   policy = data.aws_iam_policy_document.authenticated_access.json
 }
 
-#DataSource to generate a policy document
 data "aws_iam_policy_document" "authenticated_access" {
   statement {
     principals {
@@ -29,7 +27,8 @@ data "aws_iam_policy_document" "authenticated_access" {
     actions = [
       "s3:GetObject",
       "s3:ListBucket",
-      "s3:PutObject"
+      "s3:PutObject",
+      "s3:DeleteObject"
     ]
 
     resources = [

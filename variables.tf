@@ -46,6 +46,12 @@ variable "automatically_after_days" {
   default     = "30"
 }
 
+variable "cookie_and_token_expiration_time_in_minutes" {
+  description = "Expiration time for cookie and token in minutes"
+  type        = string
+  default     = "15"
+}
+
 
 
   

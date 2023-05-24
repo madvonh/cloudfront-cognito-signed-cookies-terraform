@@ -49,10 +49,12 @@ resource "aws_ssm_parameter" "ClientId" {
   provider = aws.us-east-1
 }
 
-resource "aws_ssm_parameter" "CookieExpirationTimeInMinuits" {
-  name     = "${var.project_prefix}-expiration-time-in-minuits"
+////correct this:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+resource "aws_ssm_parameter" "CookieExpirationTimeInMinutes" {
+  name     = "${var.project_prefix}-expiration-time-in-minutes"
   type     = "String"
-  value    = "15"
+  value    = var.cookie_and_token_expiration_time_in_minutes
   tier     = "Standard"
   provider = aws.us-east-1
 }

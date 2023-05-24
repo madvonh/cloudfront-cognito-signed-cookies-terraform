@@ -24,6 +24,6 @@ output "aws_cognito_user_pool_Client_id" {
   value = aws_cognito_user_pool_client.client.id
 }
 
-output "aws_cognito_user_pool_domain_id" {
-  value = aws_cognito_user_pool_domain.cognito-domain.domain
+output "aws_cloudfront_distribution_ImageDistribution_domain_name" {
+  value = aws_cloudfront_distribution.ImageDistribution.domain_name
 }

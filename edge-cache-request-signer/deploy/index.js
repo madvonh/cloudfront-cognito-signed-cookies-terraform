@@ -299,7 +299,7 @@ const setAuthCacheValues = async () => {
   }
   if (cache.expirationTimeInMinuits == null) {
     const result = await loadParameter(
-      `devsignauth-expiration-time-in-minuits`
+      `devsignauth-expiration-time-in-minutes`
     );
     cache.expirationTimeInMinuits = parseInt(result, 10);
   }
@@ -422,22 +422,3 @@ exports.handler = async (event, context, callback) => {
     return;
   }
 };
-
-// optional claims examples
-// if we where to validate the claims to see if the user belongs to a certain group
-/*
-const params = {
-  region: region, 
-  userPoolId: 'us-west-2_H8xaPj7fC', 
-  debug: true // optional parameter to show console logs
-}
-
-const claims = {
-  aud: '5nckn0n3v1a3efplt27p5cnpkg', // clientId
-  email_verified: true,
-  auth_time: time => time <= 1524588564,
-  'cognito:groups': groups => groups.includes('Admins')
-}
-
-const verifier = new Verifier(params, claims);
-*/
