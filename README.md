@@ -4,15 +4,14 @@ This repository contains a solution for creating an AWS CloudFront distribution 
 
 The implementation details and usage instructions are provided in the following blog post:
 
-[https://medium.com/webstep/use-terraform-to-create-an-aws-cloudfront-distribution-from-s3-secured-with-cognito-signed-cookie-26cdfddb306c] (https://medium.com/webstep/use-terraform-to-create-an-aws-cloudfront-distribution-from-s3-secured-with-cognito-signed-cookie-26cdfddb306c)
-
+https://medium.com/webstep/use-terraform-to-create-an-aws-cloudfront-distribution-from-s3-secured-with-cognito-signed-cookie-26cdfddb306c
 
 ## Get Started with Terraform
 
 To use this solution, follow these steps:
 
 1. Install Terraform on your machine. You can find installation instructions for your specific operating system by visiting: 
-[https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli] (https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 2. Create an IAM user in AWS with the credential type "Access key - Programmatic access" and attach the Administrator policy to it. Save the Access Key and Secret Key generated for this user.
 3. Configure the AWS CLI on your local system by running the command `aws configure` in the command prompt. Provide the access and secret keys, default region, and output format. Terraform will use these credentials to connect to the AWS API.
 
@@ -139,4 +138,4 @@ To be able to destroy the solution, the lambda@edge "EdgeCacheRequestSigner" con
 
 Remove the above part and run "Terraform apply". Then you can remove the lambda or the whole solution using terraform destroy. If everything is removed at once, the Terraform apply will fail. For more information about this issue, refer to the following documentation from the Terraform provider:
 
-[https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-delete-replicas.html] (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-delete-replicas.html)
+https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-edge-delete-replicas.html
