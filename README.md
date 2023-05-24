@@ -1,6 +1,6 @@
 # cloudfront-cognito-signed-cookies-terraform
 
-This repository contains a solution for creating an AWS CloudFront distribution with S3, secured with Cognito signed cookies, using Terraform.
+This repository contains a solution for creating an AWS CloudFront distribution with S3, secured with Cognito and signed cookies, using Terraform.
 
 The implementation details and usage instructions are provided in the following blog post:
 
@@ -19,7 +19,7 @@ https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 
 The lambda function "edge-cache-request-signer" uses packages that need to be downloaded before deploying this Terraform project.
 
-To do this, make sure you have npm and Node.js installed. Then open a terminal window in the folder "edge-cache-request-signer/deploy" and run the following command. Once done, you should have a "node_modules" folder in the current directory.
+To do this, make sure you have npm and node installed. Then open a terminal window in the folder "edge-cache-request-signer/deploy" and run the following command. Once done, you should have a "node_modules" folder in the current directory.
 
 ```bash
 npm install
@@ -37,20 +37,29 @@ resource "local_file" "changed_index_file" {
   filename = "${path.module}/edge-cache-request-signer/deploy/index.js"
 }
 ```
+
 ## Deploy Solution
 
-The command to deploy with Terraform is:
+The variables used in this solution are defined in the file 'variables.tf'. Before deploying, you need to provide your own values for these variables in a '.tfvars' file. You can use 'terraform.tfvars' as the default '.tfvars' file that Terraform will automatically use. Additionally, you can create multiple '.tfvars' files for different environments and specify the path to the file you want to use during the 'apply' command, like this:
+```code
+terraform apply -var-file="path/to/your.tfvars"
+```
+If you don't specify a '.tfvars' file, Terraform will use 'terraform.tfvars' by default.
+
+To deploy the infrastructure using the default '.tfvars' file, you can simply run:
 ```code
 terraform apply
 ```
-To preview the changes before deploying, you can use the plan command:
+If you want to preview the changes before deploying, you can use the 'plan' command:
 ```code
 terraform plan
 ```
+This will show you the planned changes without actually applying them.
 
 If this Terraform solution is deployed multiple times and the lambda function "EdgeOriginRequestSigner" is modified, please note that a new version of the lambda function will be created. This behavior is due to the "publish = true" parameter, which is necessary for the CloudFront reference.
 
 If changes were made to the function and you want to deploy a new version, ensure that "publish = true" is included. However, if you don't want a new version to be deployed, you can comment out or remove the "publish = true" line.
+
 
 ## Security Setup for Image Request
 
