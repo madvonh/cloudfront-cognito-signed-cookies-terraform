@@ -7,11 +7,6 @@ resource "aws_s3_bucket" "photo_bucket" {
   ))
 }
 
-resource "aws_s3_bucket_acl" "photo_bucket_acl" {
-  bucket = aws_s3_bucket.photo_bucket.id
-  acl    = "private"
-}
-
 resource "aws_s3_bucket_policy" "authenticated_access" {
   bucket = aws_s3_bucket.photo_bucket.id
   policy = data.aws_iam_policy_document.authenticated_access.json

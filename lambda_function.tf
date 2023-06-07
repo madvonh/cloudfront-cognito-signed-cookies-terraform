@@ -23,7 +23,7 @@ data "archive_file" "EdgeCacheRequestSignerArchive" {
 resource "aws_lambda_function" "EdgeCacheRequestSigner" {
   architectures                  = ["x86_64"]
   description                    = "Signing requests to cache"
-  function_name                  = "edge-cache-request-signer"
+  function_name                  = "${var.project_prefix}-edge-cache-request-signer"
   handler                        = "index.handler"
   filename                       = data.archive_file.EdgeCacheRequestSignerArchive.output_path
   memory_size                    = "128" # max size allowed for "viewer-request" event type
